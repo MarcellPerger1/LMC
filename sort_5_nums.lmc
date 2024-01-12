@@ -1,0 +1,78 @@
+INP
+STA i0
+INP
+STA i1
+INP
+STA i2
+INP
+STA i3
+INP
+STA i4
+loop_start LDA one
+    STA no_swaps
+    LDA i1
+    SUB i0
+    BRP item_1_2
+        LDA i1
+        STA temp
+        LDA i0
+        STA i1
+        LDA temp
+        STA i0
+        LDA zero
+        STA no_swaps
+    item_1_2 LDA i2
+    SUB i1
+    BRP item_2_3
+        LDA i2
+        STA temp
+        LDA i1
+        STA i2
+        LDA temp
+        STA i1
+        LDA zero
+        STA no_swaps
+    item_2_3 LDA i3
+    SUB i2
+    BRP item_3_4
+        LDA i3
+        STA temp
+        LDA i2
+        STA i3
+        LDA temp
+        STA i2
+        LDA zero
+        STA no_swaps
+    item_3_4 LDA i4
+    SUB i3
+    BRP end_of_swaps
+        LDA i4
+        STA temp
+        LDA i3
+        STA i4
+        LDA temp
+        STA i3
+        LDA zero
+        STA no_swaps
+    end_of_swaps LDA no_swaps
+    BRZ loop_start
+LDA i0
+OUT
+LDA i1
+OUT
+LDA i2
+OUT
+LDA i3
+OUT
+LDA i4
+OUT
+HLT
+one DAT 1
+zero DAT 0
+temp DAT
+no_swaps DAT
+i0 DAT 89
+i1 DAT 15
+i2 DAT 73
+i3 DAT -56
+i4 DAT -158

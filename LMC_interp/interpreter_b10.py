@@ -48,6 +48,7 @@ class InterpreterB10:
         """Accumulator (ACC) - Internal, prefer to use .acc which wraps on write"""
         self.is_halted = False
         self.decoded_instr: Instruction | None = None
+        self.n_instr = 0
 
     def _make_memory_obj(self, initial_memory: list[int] | None) -> list[int]:
         if initial_memory is None:
@@ -60,13 +61,14 @@ class InterpreterB10:
 
     @classmethod
     def from_instr_list(cls, instructions: list[int | Instruction | Data],
-                        wrap_memory=False, wrap_values=True, extensions=True):
+                        wrap_memory=False, wrap_values=True,
+                        extensions=True) -> InterpreterB10:
         return cls(instructions_to_memory(instructions),
                    wrap_memory, wrap_values, extensions)
 
     @classmethod
     def from_source(cls, source: str, wrap_memory=False, wrap_values=True,
-                    extensions=True, append_hlt=False):
+                    extensions=True, append_hlt=False) -> InterpreterB10:
         p = AsmParser(source, extensions, append_hlt).parse()
         return cls(p.memory, wrap_memory, wrap_values, extensions)
 
@@ -79,6 +81,7 @@ class InterpreterB10:
         self.normalize_ip()
         self.cir = self.memory[self.ip]
         self.ip += 1
+        self.n_instr += 1
 
     def decode(self):
         self.decoded_instr: Instruction = Instruction.get_instr(self.cir)

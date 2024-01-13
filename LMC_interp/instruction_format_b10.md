@@ -1,4 +1,4 @@
-## Instruction format for base 10 instructions:  
+# Instruction format for base 10 instructions:
 `<opcode: 0-9> <operand: 00-99>`
 
 ## Opcode list:

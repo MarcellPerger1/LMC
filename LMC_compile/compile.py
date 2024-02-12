@@ -1,8 +1,7 @@
 import contextlib
-# TODO this has been removed in 3.13, switch to setuptools._distutils
+# TODO this has been removed in 3.12+, switch to setuptools._distutils
 #  or something. OR just call MSVC ourselves - it can't be that hard right?
 import distutils.ccompiler as ccompiler
-import os
 from pathlib import Path
 from typing import Iterable, cast, Any
 
@@ -67,17 +66,8 @@ class LmcRtCompiler:
         self.out_dir = self.curr_dir / 'out' / self.out_name
         self.base: None | BaseCompiler = None
 
-    @contextlib.contextmanager
-    def temp_cd(self, target: str | os.PathLike[str]):
-        orig_cwd = os.getcwd()
-        try:
-            os.chdir(target)
-            yield
-        finally:
-            os.chdir(orig_cwd)
-
     def run(self):
-        with self.temp_cd(self.curr_dir):
+        with contextlib.chdir(self.curr_dir):
             self.out_dir.mkdir(parents=True, exist_ok=True)
             self.base = BaseCompiler(
                 self.sources, 'lmc_runtime.exe', [], str(self.out_dir),

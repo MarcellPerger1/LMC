@@ -35,6 +35,7 @@ class BaseCompiler:
     def compile(self):
         postargs = []
         if self.is_msvc:
+            postargs += ['/std:c17']
             if self.debug and self.obj_dir is not None:
                 postargs += ['/Fd' + str(self.obj_dir / 'vc140_fd_pdb.pdb')]
             if self.verbose:

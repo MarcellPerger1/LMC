@@ -16,6 +16,8 @@ Features:
     this is mainly for programmatic use"""
 from __future__ import annotations
 
+from typing import Self
+
 from LMC_interp.base_instruction import Instruction
 from LMC_interp.data_instruction import Data
 from LMC_interp.errors import (
@@ -34,10 +36,12 @@ class InterpreterB10:
 
     # region init
     def __init__(self, initial_memory: list[int] | None = None,
-                 wrap_memory=False, wrap_values=True, extensions=True):
+                 wrap_memory=False, wrap_values=True, extensions=True,
+                 inp_prompt='>? '):
         self.wrap_memory = wrap_memory
         self.wrap_values = wrap_values
         self.extensions = extensions
+        self.inp_prompt = inp_prompt
         self.memory = self._make_memory_obj(initial_memory)
         self.io = IOMgr(self)
         self.ip = 0
@@ -62,15 +66,16 @@ class InterpreterB10:
     @classmethod
     def from_instr_list(cls, instructions: list[int | Instruction | Data],
                         wrap_memory=False, wrap_values=True,
-                        extensions=True) -> InterpreterB10:
+                        extensions=True, inp_prompt: str = '>? ') -> Self:
         return cls(instructions_to_memory(instructions),
-                   wrap_memory, wrap_values, extensions)
+                   wrap_memory, wrap_values, extensions, inp_prompt)
 
     @classmethod
-    def from_source(cls, source: str, wrap_memory=False, wrap_values=True,
-                    extensions=True, append_hlt=False) -> InterpreterB10:
+    def from_source(cls: type[Self], source: str, wrap_memory=False, wrap_values=True,
+                    extensions=True, append_hlt=False,
+                    inp_prompt: str = '>? ') -> Self:
         p = AsmParser(source, extensions, append_hlt).parse()
-        return cls(p.memory, wrap_memory, wrap_values, extensions)
+        return cls(p.memory, wrap_memory, wrap_values, extensions, inp_prompt)
 
     # endregion
 

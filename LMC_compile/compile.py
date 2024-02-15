@@ -1,7 +1,11 @@
 import contextlib
 # TODO this has been removed in 3.12+, switch to setuptools._distutils
 #  or something. OR just call MSVC ourselves - it can't be that hard right?
-import distutils.ccompiler as ccompiler
+try:
+    import distutils.ccompiler as ccompiler
+except ImportError:
+    import setuptools._distutils.ccompiler as ccompiler
+import sys
 from pathlib import Path
 from typing import Iterable, cast, Any
 
@@ -35,6 +39,8 @@ class BaseCompiler:
                 postargs += ['/Fd' + str(self.obj_dir / 'vc140_fd_pdb.pdb')]
             if self.verbose:
                 postargs += ['/showIncludes']
+            else:
+                postargs += ['/nologo']
         self.objects = self.cc.compile(
             self.sources, str(self.obj_dir), debug=self.debug,
             extra_postargs=postargs,
@@ -44,10 +50,14 @@ class BaseCompiler:
     def link(self):
         postargs = []
         if self.is_msvc:
-            if self.debug and self.obj_dir is not None:
-                postargs += ['/PDB:' + str(self.obj_dir / f'pdb_2_{self.exe_name}.pdb')]
+            if self.debug:
+                if self.obj_dir is not None:
+                    postargs += ['/PDB:' + str(self.obj_dir / f'pdb_2_{self.exe_name}.pdb')]
+                postargs += ['/LTCG:OFF']
             if self.verbose:
                 postargs += ['/VERBOSE']
+            else:
+                postargs += ['/NOLOGO']
         self.cc.link(self.out_type, self.objects, self.exe_name, self.exe_dir,
                      self.libraries, debug=self.debug, extra_postargs=postargs)
 
@@ -79,5 +89,23 @@ def compile_runtime(debug=True, verbose=False):
     LmcRtCompiler(['lmc_runtime.c'], debug, verbose).run()
 
 
+def main(argv: list[str] = None):
+    if argv is None:
+        argv = sys.argv[1:]
+    import argparse
+    p = argparse.ArgumentParser('python -m LMC_compile.compile')
+    debug_group = p.add_mutually_exclusive_group()
+    debug_group.add_argument('-O', '--optimize',
+                             action='store_false', help='Compile with optimizations',
+                             dest='debug', default=True)
+    debug_group.add_argument('-d', '--debug', '--no-optimize',
+                             action='store_true', dest='debug',
+                             help='Disable optimisations')
+    p.add_argument('-v', '--verbose', action='store_true',
+                   help="Be VERY verbose")
+    args = p.parse_args(argv)
+    compile_runtime(args.debug, args.verbose)
+
+
 if __name__ == '__main__':
-    compile_runtime(verbose=True)
+    main()

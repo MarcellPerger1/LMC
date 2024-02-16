@@ -5,6 +5,15 @@
         "corecrt_stdio_config.h": "c",
         "corecrt_wstdio.h": "c",
         "lmc_assert.h": "c",
-        "stdlib.h": "c"
-    }
+        "stdlib.h": "c",
+        "LMC_compile/lmc_runtime_lib/*.h": "c",
+        "stdbool.h": "c",
+        "stddef.h": "c",
+        "**/lmc_runtime_lib/**/*.h": "c",
+        "vcruntime.h": "c",
+        "limits.h": "c",
+        "stdnoreturn.h": "c"
+    },
+    "C_Cpp.default.cStandard": "c17",
+    "C_Cpp.default.intelliSenseMode": "windows-msvc-x64"
 }

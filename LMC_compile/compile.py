@@ -8,7 +8,7 @@ try:
 except ImportError:
     # noinspection PyProtectedMember
     import setuptools._distutils.ccompiler as ccompiler
-from _types_msvccompiler import MSVCCompiler
+from LMC_compile._types_msvccompiler import MSVCCompiler
 
 __all__ = ['compile_runtime']
 

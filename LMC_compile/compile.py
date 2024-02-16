@@ -43,7 +43,10 @@ class BaseCompiler:
                 self.cc.compile_options.remove('/W3')
             except (TypeError, AttributeError, ValueError):
                 pass
-            postargs += ['/std:c17', '/W4']
+            # C4013 should really be error by default but C standard/MSVC is weird
+            # - no-one likes a link-time error that could've been fixed with an informative error message
+            #   at compile-time and there is very few (is any) places where this 'feature' isn't harmful
+            postargs += ['/std:c17', '/W4', '/we4013']
             if self.debug and self.obj_dir is not None:
                 postargs += ['/Fd' + str(self.obj_dir / 'vc140_fd_pdb.pdb')]
             if self.verbose:

@@ -1,13 +1,14 @@
 import contextlib
-# TODO this has been removed in 3.12+, switch to setuptools._distutils
-#  or something. OR just call MSVC ourselves - it can't be that hard right?
-try:
-    import distutils.ccompiler as ccompiler
-except ImportError:
-    import setuptools._distutils.ccompiler as ccompiler
 import sys
 from pathlib import Path
 from typing import Iterable, cast, Any
+
+try:
+    import distutils.ccompiler as ccompiler
+except ImportError:
+    # noinspection PyProtectedMember
+    import setuptools._distutils.ccompiler as ccompiler
+from _types_msvccompiler import MSVCCompiler
 
 __all__ = ['compile_runtime']
 
@@ -35,7 +36,8 @@ class BaseCompiler:
     def compile(self):
         postargs = []
         if self.is_msvc:
-            try:  # using private methods here so use try/catch
+            assert isinstance(self.cc, MSVCCompiler)
+            try:  # using internal methods here so use try/catch
                 self.cc.initialize()
                 self.cc.compile_options_debug.remove('/W3')
                 self.cc.compile_options.remove('/W3')

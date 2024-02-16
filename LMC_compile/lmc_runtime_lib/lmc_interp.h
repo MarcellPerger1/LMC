@@ -11,7 +11,7 @@
 typedef struct _LmcInterpS {
     LmcMemT mem;
     usize ip;
-    u32 acc;
+    i32 acc;
     LmcIoT io;
     bool is_halted;
 } LmcInterpT;

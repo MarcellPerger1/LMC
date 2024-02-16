@@ -25,7 +25,7 @@ LmcIoT LmcIo_create1(bool addPromptS) {
     return lio;
 }
 
-LmcIoT LmcIo_create0() {
+LmcIoT LmcIo_create0(void) {
     return LmcIo_create1(true);
 }
 

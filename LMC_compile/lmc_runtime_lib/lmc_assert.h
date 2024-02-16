@@ -14,20 +14,20 @@
 #define LmcAssert_FATAL2(cond, msg) _LmcAssert_AssertMsgFatal_Func(cond, msg, __FILE__, __LINE__, __FUNCTION__)
 
 
-void _LmcAssert_FailWithMsg(const char* msg, const char* dunder_file, int dunder_line, const char* dunder_func) {
+noreturn void _LmcAssert_FailWithMsg(const char* msg, const char* dunder_file, int dunder_line, const char* dunder_func) {
     fprintf(stderr, "%s:%i %s (in function %s)", dunder_file, dunder_line, msg, dunder_func);
     abort();
 }
-void _LmcAssert_FailNoMsg(const char* dunder_file, int dunder_line, const char* dunder_func) {
+noreturn void _LmcAssert_FailNoMsg(const char* dunder_file, int dunder_line, const char* dunder_func) {
     fprintf(stderr, "%s:%i LmcAssert_ASSERT() failed in %s, aborting", dunder_file, dunder_line, dunder_func);
     abort();
 }
 
-noreturn void _LmcAssert_AssertMsgFatal_Func(bool cond, const char* msg, const char* dunder_file, int dunder_line, const char* dunder_func) {
+void _LmcAssert_AssertMsgFatal_Func(bool cond, const char* msg, const char* dunder_file, int dunder_line, const char* dunder_func) {
     if(!cond) _LmcAssert_FailWithMsg(msg, dunder_file, dunder_line, dunder_func);
 }
 
-noreturn void _LmcAssert_AssertFatal_Func(bool cond, const char* dunder_file, int dunder_line, const char* dunder_func) {
+void _LmcAssert_AssertFatal_Func(bool cond, const char* dunder_file, int dunder_line, const char* dunder_func) {
     if(!cond) _LmcAssert_FailNoMsg(dunder_file, dunder_line, dunder_func);
 }
 

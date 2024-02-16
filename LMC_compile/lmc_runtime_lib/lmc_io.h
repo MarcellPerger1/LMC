@@ -17,12 +17,16 @@ typedef struct _LmcIoS {
     bool addPromptS;
 } LmcIoT;
 
-LmcIoT LmcIo_create(bool addPromptS) {
-    LmcIoT lio {
+LmcIoT LmcIo_create1(bool addPromptS) {
+    LmcIoT lio = {
         false,
         addPromptS
     };
     return lio;
+}
+
+LmcIoT LmcIo_create0() {
+    return LmcIo_create1(true);
 }
 
 void LmcIo_writeChar(LmcIoT* self, i32 value) {
@@ -47,6 +51,7 @@ void LmcIo_writeNum(LmcIoT* self, i32 value) {
 i32 LmcIo_readNum(LmcIoT* self) {
     i32 ival;
     wchar_t endch;
+    // I really hope this works - IO + strings in C is a MESS
     for(;;) {
         if(self->addPromptS) { wprintf(L">? \n"); }
         int nargs = wscanf(L" %" SCNi32  L"%*2000[ \t]%c", &ival, &endch);

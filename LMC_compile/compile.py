@@ -107,16 +107,23 @@ def main(argv: list[str] = None):
     import argparse
     p = argparse.ArgumentParser('python -m LMC_compile.compile')
     debug_group = p.add_mutually_exclusive_group()
-    debug_group.add_argument('-O', '--optimize',
+    debug_group.add_argument('-O', '--optimize', '--release',
                              action='store_false', help='Compile with optimizations',
                              dest='debug', default=True)
     debug_group.add_argument('-d', '--debug', '--no-optimize',
                              action='store_true', dest='debug',
                              help='Disable optimisations')
+    debug_group.add_argument('-a', '--all',
+                             action='store_const', dest='debug', const='BOTH',
+                             help='Compile both debug and release builds')
     p.add_argument('-v', '--verbose', action='store_true',
                    help="Be VERY verbose")
     args = p.parse_args(argv)
-    compile_runtime(args.debug, args.verbose)
+    if args.debug == 'BOTH':
+        compile_runtime(False, args.verbose)
+        compile_runtime(True, args.verbose)
+    else:
+        compile_runtime(args.debug, args.verbose)
 
 
 if __name__ == '__main__':

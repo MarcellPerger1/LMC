@@ -39,7 +39,7 @@ class IOMgr:
         num_range = self.interp.value_range
         while True:
             try:
-                value = int(input(">? "))
+                value = int(input(self.interp.inp_prompt))
             except ValueError:
                 print('Input must be an integer')
                 continue

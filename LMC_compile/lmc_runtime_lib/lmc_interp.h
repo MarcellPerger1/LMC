@@ -69,6 +69,7 @@ void LmcInterp_main(LmcInterpT* self) {
     while(!self->is_halted) {
         // FETCH
         u32 cir = LmcInterp_fetchCurrInstr(self);
+        ++(self->ip);
         // DECODE
         // 5 MSB; the `& 0x1F` is just to make it explicit to the compiler that its 5 bits
         u32 opcode = (cir >> 27) & 0x1F;
